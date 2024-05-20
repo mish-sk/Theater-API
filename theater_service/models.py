@@ -10,7 +10,7 @@ class Ticket(models.Model):
 
     def __str__(self):
         return (f"Row: {self.row}, Seat: {self.seat}. "
-                f"Perfomance: {self.performance.play.title}")
+                f"Performance: {self.performance.play.title}")
 
 
 class Reservation(models.Model):
