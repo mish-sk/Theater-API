@@ -8,6 +8,10 @@ class Ticket(models.Model):
     performance = models.ForeignKey("Performance", on_delete=models.CASCADE)
     reservation = models.ForeignKey("Reservation", on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ("row", "seat", "performance",)
+        ordering = ["reservation"]
+
     def __str__(self):
         return (f"Row: {self.row}, Seat: {self.seat}. "
                 f"Performance: {self.performance.play.title}")
