@@ -17,6 +17,8 @@ from theater_service.serializers import (
     PerformanceSerializer,
     TheaterHallSerializer,
     PlaySerializer,
+    PlayListSerializer,
+    PlayDetailSerializer,
     ActorSerializer,
     GenreSerializer,
 )
@@ -38,6 +40,9 @@ class ReservationViewSet(
 ):
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
 
 
 class PerformanceViewSet(
@@ -63,8 +68,16 @@ class PlayViewSet(
     mixins.CreateModelMixin,
     viewsets.GenericViewSet,
 ):
-    queryset = Play.objects.all()
+    queryset = Play.objects.prefetch_related("genres", "actors")
     serializer_class = PlaySerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PlayListSerializer
+        if self.action == "retrieve":
+            return PlayDetailSerializer
+
+        return PlaySerializer
 
 
 class ActorViewSet(
