@@ -169,7 +169,11 @@ class PerformanceDetailSerializer(PerformanceSerializer):
 
 
 class TicketListSerializer(TicketSerializer):
-    performances = PerformanceListSerializer(many=False, read_only=True)
+    performance = PerformanceListSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Ticket
+        fields = ("id", "row", "seat", "performance")
 
 
 class ReservationListSerializer(ReservationSerializer):
