@@ -6,8 +6,8 @@ from django.db import models
 class Ticket(models.Model):
     row = models.IntegerField()
     seat = models.IntegerField()
-    performance = models.ForeignKey("Performance", on_delete=models.CASCADE)
-    reservation = models.ForeignKey("Reservation", on_delete=models.CASCADE)
+    performance = models.ForeignKey("Performance", on_delete=models.CASCADE, related_name="tickets")
+    reservation = models.ForeignKey("Reservation", on_delete=models.CASCADE, related_name="tickets")
 
     class Meta:
         unique_together = ("row", "seat", "performance",)
@@ -64,6 +64,12 @@ class Performance(models.Model):
     play = models.ForeignKey("Play", on_delete=models.CASCADE)
     theater_hall = models.ForeignKey("TheaterHall", on_delete=models.CASCADE)
     show_time = models.DateTimeField()
+
+    class Meta:
+        ordering = ["-show_time"]
+
+    def __str__(self):
+        return self.play.title + " " + str(self.show_time)
 
 
 class TheaterHall(models.Model):

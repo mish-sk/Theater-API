@@ -1,3 +1,4 @@
+from django.db.models import F, Count
 from django.shortcuts import render
 from rest_framework import viewsets, mixins
 
@@ -15,6 +16,8 @@ from theater_service.serializers import (
     TicketSerializer,
     ReservationSerializer,
     PerformanceSerializer,
+    PerformanceListSerializer,
+    PerformanceDetailSerializer,
     TheaterHallSerializer,
     PlaySerializer,
     PlayListSerializer,
@@ -45,13 +48,27 @@ class ReservationViewSet(
         return self.queryset.filter(user=self.request.user)
 
 
-class PerformanceViewSet(
-    mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    viewsets.GenericViewSet,
-):
-    queryset = Performance.objects.all()
+class PerformanceViewSet(viewsets.ModelViewSet):
+    queryset = (
+        Performance.objects.all()
+        .select_related("play", "theater_hall")
+        .annotate(
+            tickets_available=(
+                F("theater_hall__rows") * F("theater_hall__seat_in_the_row")
+                - Count("tickets")
+            )
+        )
+    )
     serializer_class = PerformanceSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PerformanceListSerializer
+
+        if self.action == "retrieve":
+            return PerformanceDetailSerializer
+
+        return PerformanceSerializer
 
 
 class TheaterHallViewSet(
