@@ -59,6 +59,12 @@ class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.created_at)
+
+    class Meta:
+        ordering = ["-created_at"]
+
 
 class Performance(models.Model):
     play = models.ForeignKey("Play", on_delete=models.CASCADE)

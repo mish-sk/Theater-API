@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.db import transaction
 from rest_framework import serializers
 from theater_service.models import (
     Ticket,
@@ -55,9 +56,19 @@ class TicketSeatsSerializer(TicketSerializer):
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    tickets = TicketSerializer(many=True, read_only=True, allow_empty=False)
+
     class Meta:
         model = Reservation
-        fields = ("id", "created_at", "user")
+        fields = ("id", "tickets", "created_at", "user")
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            tickets_data = validated_data.pop("tickets")
+            reservation = Reservation.objects.create(**validated_data)
+            for ticket_data in tickets_data:
+                Ticket.objects.create(reservation=reservation, **ticket_data)
+            return reservation
 
 
 class TheaterHallSerializer(serializers.ModelSerializer):
@@ -156,3 +167,10 @@ class PerformanceDetailSerializer(PerformanceSerializer):
         model = Performance
         fields = ("id", "show_time", "play", "theater_hall", "taken_seats")
 
+
+class TicketListSerializer(TicketSerializer):
+    performances = PerformanceListSerializer(many=False, read_only=True)
+
+
+class ReservationListSerializer(ReservationSerializer):
+    tickets = TicketListSerializer(many=True, read_only=True)
