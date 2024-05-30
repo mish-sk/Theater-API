@@ -85,6 +85,12 @@ class Play(models.Model):
     genres = models.ManyToManyField("Genre", blank=True, verbose_name="plays")
     actors = models.ManyToManyField("Actor", blank=True, verbose_name="plays")
 
+    class Meta:
+        ordering = ["title"]
+
+    def __str__(self):
+        return self.title
+
 
 class Actor(models.Model):
     first_name = models.CharField(max_length=255)

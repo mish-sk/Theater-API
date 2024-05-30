@@ -11,6 +11,20 @@ from theater_service.models import (
 )
 
 
+class ActorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Actor
+        fields = ("id", "first_name", "last_name", "full_name")
+
+
+class GenreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Genre
+        fields = ("id", "name")
+
+
 class TicketSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
@@ -78,15 +92,29 @@ class PlaySerializer(serializers.ModelSerializer):
         )
 
 
-class ActorSerializer(serializers.ModelSerializer):
+class PlayListSerializer(PlaySerializer):
+    genres = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field="name"
+    )
+    actors = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field="full_name"
+    )
 
     class Meta:
-        model = Actor
-        fields = ("id", "first_name", "last_name", "full_name")
+        model = Play
+        fields = ("id", "title", "genres", "actors")
 
 
-class GenreSerializer(serializers.ModelSerializer):
+class PlayDetailSerializer(PlaySerializer):
+    genres = GenreSerializer(many=True, read_only=True)
+    actors = ActorSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Genre
-        fields = ("id", "name")
+        model = Play
+        fields = (
+            "id",
+            "title",
+            "description",
+            "genres",
+            "actors",
+        )
