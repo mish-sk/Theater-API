@@ -17,7 +17,7 @@ class Ticket(models.Model):
     def validate_ticket(row, seat, theater_hall, error_to_raise):
         for ticket_attr_value, ticket_attr_name, theater_hall_attr_name in [
             (row, "row", "rows"),
-            (seat, "seat", "seats_in_row"),
+            (seat, "seat", "seat_in_the_row"),
         ]:
             count_attrs = getattr(theater_hall, theater_hall_attr_name)
             if not (1 <= ticket_attr_value <= count_attrs):
