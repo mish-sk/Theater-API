@@ -61,6 +61,7 @@ class TheaterHallSerializer(serializers.ModelSerializer):
             "name",
             "rows",
             "seat_in_the_row",
+            "capacity",
         )
 
 

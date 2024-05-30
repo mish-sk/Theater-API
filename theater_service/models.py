@@ -71,6 +71,13 @@ class TheaterHall(models.Model):
     rows = models.IntegerField()
     seat_in_the_row = models.IntegerField()
 
+    @property
+    def capacity(self) -> int:
+        return self.rows * self.seat_in_the_row
+
+    def __str__(self):
+        return self.name
+
 
 class Play(models.Model):
     title = models.CharField(max_length=255, unique=True)
