@@ -1,6 +1,10 @@
+import os
+import uuid
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.text import slugify
 
 
 class Ticket(models.Model):
@@ -91,11 +95,19 @@ class TheaterHall(models.Model):
         return self.name
 
 
+def play_image_file_path(instance: "Play", filename: str) -> str:
+    _, extension = os.path.splitext(filename)
+    filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
+
+    return os.path.join("uploads/plays/", filename)
+
+
 class Play(models.Model):
     title = models.CharField(max_length=255, unique=True)
     description = models.TextField(blank=True)
     genres = models.ManyToManyField("Genre", blank=True, verbose_name="genres")
     actors = models.ManyToManyField("Actor", blank=True, verbose_name="actors")
+    image = models.ImageField(null=True, upload_to=play_image_file_path)
 
     class Meta:
         ordering = ["title"]
