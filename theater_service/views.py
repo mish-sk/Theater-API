@@ -231,6 +231,36 @@ class ActorViewSet(
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
 
+    def get_queryset(self):
+        first_name = self.request.query_params.get("first_name")
+        last_name = self.request.query_params.get("last_name")
+
+        queryset = self.queryset
+
+        if first_name:
+            queryset = queryset.filter(first_name__icontains=first_name)
+        if last_name:
+            queryset = queryset.filter(last_name__icontains=last_name)
+
+        return queryset
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "first_name",
+                type=OpenApiTypes.STR,
+                description="Filter by first name (ex. ?name=John)",
+            ),
+            OpenApiParameter(
+                "last_name",
+                type=OpenApiTypes.STR,
+                description="Filter by last name (ex. ?name=Black)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class GenreViewSet(
     mixins.ListModelMixin,
