@@ -44,7 +44,25 @@ INSTALLED_APPS = [
     "rest_framework",
     "theater_service",
     "user",
+    "drf_spectacular"
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Theater Project API",
+    "DESCRIPTION": "Theater API Service",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2,
+    }
+}
 
 AUTH_USER_MODEL = "user.User"
 
