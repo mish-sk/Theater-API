@@ -9,11 +9,12 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
 
-from theater_service.models import Play, Performance, TheaterHall, Genre, Actor
+from theater_service.models import Play, TheaterHall, Genre, Actor
+from ticket_service.models import Performance
 from theater_service.serializers import PlayListSerializer, PlayDetailSerializer
 
 PLAY_URL = reverse("theater:play-list")
-PLAY_SESSION_URL = reverse("theater:performance-list")
+PLAY_SESSION_URL = reverse("tickets:performance-list")
 
 
 def sample_play(**params):
