@@ -45,8 +45,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "theater_service",
+    "ticket_service",
     "user",
-    "drf_spectacular"
+    "drf_spectacular",
 ]
 
 REST_FRAMEWORK = {
