@@ -2,9 +2,6 @@ from django.urls import path, include
 from rest_framework import routers
 
 from theater_service.views import (
-    TicketViewSet,
-    ReservationViewSet,
-    PerformanceViewSet,
     TheaterHallViewSet,
     PlayViewSet,
     ActorViewSet,
@@ -14,9 +11,6 @@ from theater_service.views import (
 
 router = routers.DefaultRouter()
 
-router.register("ticket", TicketViewSet)
-router.register("reservation", ReservationViewSet)
-router.register("performance", PerformanceViewSet)
 router.register("theater_hall", TheaterHallViewSet)
 router.register("play", PlayViewSet)
 router.register("actor", ActorViewSet)
